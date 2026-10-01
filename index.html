@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RODNEY | Catálogo Exclusivo & Presupuestos</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              900: '#064e3b',
+              dark: '#0f172a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col pb-20 md:pb-0">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-slate-900 text-white text-xs font-medium py-2 px-4 text-center tracking-wide flex items-center justify-center gap-2">
+    <span class="inline-flex items-center justify-center bg-emerald-500 text-slate-950 font-bold px-2 py-0.5 rounded-full text-[10px] uppercase tracking-wider">Nuevo</span>
+    <span>¡Catálogo actualizado! Selecciona tus productos y solicita presupuesto directo a WhatsApp.</span>
+  </div>
+
+  <!-- Navbar -->
+  <header class="sticky top-0 z-40 w-full glass-nav border-b border-slate-200/80 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20">
+        
+        <!-- Logo & Brand -->
+        <div class="flex items-center gap-3">
+          <button id="mobileMenuBtn" class="md:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100 transition-colors focus:outline-none" aria-label="Abrir menú móvil">
+            <i class="fa-solid fa-bars-staggered text-xl"></i>
+          </button>
+          <a href="#inicio" class="flex items-center gap-2 group">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform duration-300">
+              <i class="fa-solid fa-bag-shopping text-lg"></i>
+            </div>
+            <div class="flex flex-col">
+              <span id="navStoreName" class="text-xl md:text-2xl font-black tracking-tight text-slate-900">RODNEY STORE</span>
+              <span class="text-[10px] uppercase font-bold tracking-widest text-emerald-600 -mt-1">Tienda Oficial</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+          <a href="#inicio" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-700 hover:text-emerald-600 hover:bg-emerald-50/50 transition-all">Inicio</a>
+          <a href="#catalogo" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-700 hover:text-emerald-600 hover:bg-emerald-50/50 transition-all">Productos</a>
+          <a href="#categorias" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-700 hover:text-emerald-600 hover:bg-emerald-50/50 transition-all">Categorías</a>
+          <a href="#contacto" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-700 hover:text-emerald-600 hover:bg-emerald-50/50 transition-all">Contacto</a>
+        </nav>
+
+        <!-- Search Bar & Actions -->
+        <div class="flex items-center gap-2 md:gap-3">
+          <!-- Search Toggle / Input Desktop -->
+          <div class="relative hidden sm:block w-44 md:w-64">
+            <input type="text" id="desktopSearchInput" placeholder="Buscar productos..." class="w-full bg-slate-100/90 text-sm rounded-full pl-9 pr-4 py-2 border border-transparent focus:border-emerald-500 focus:bg-white focus:outline-none transition-all placeholder:text-slate-400">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          </div>
+
+          <!-- Quick Mobile Search Button -->
+          <button id="mobileSearchToggle" class="sm:hidden p-2.5 rounded-xl text-slate-700 hover:bg-slate-100 transition-colors" aria-label="Buscar">
+            <i class="fa-solid fa-magnifying-glass text-lg"></i>
+          </button>
+
+          <!-- Cart Button Drawer Trigger -->
+          <button id="openCartBtn" class="relative p-2.5 rounded-xl bg-slate-900 text-white hover:bg-emerald-600 transition-all shadow-md shadow-slate-900/10 flex items-center justify-center group" aria-label="Ver Carrito">
+            <i class="fa-solid fa-cart-shopping text-base group-hover:scale-110 transition-transform"></i>
+            <span id="cartCountBadge" class="absolute -top-1.5 -right-1.5 bg-emerald-500 text-white text-[11px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">0</span>
+          </button>
+
+          <!-- Admin Panel Access -->
+          <button id="openAdminBtn" class="p-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors text-base" title="Panel de Administración" aria-label="Administrador">
+            <i class="fa-solid fa-gear"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+ </header>
+    <!-- Mobile Collapsible Search Bar -->
+    <div id="mobileSearchBar" class="hidden sm:hidden border-t border-slate-200/80 px-4 py-3 bg-white">
+      <div class="relative">
+        <input type="text" id="mobileSearchInput" placeholder="Buscar por nombre, modelo o categoría..." class="w-full bg-slate-100 text-sm rounded-xl pl-10 pr-4 py-2.5 border border-slate-200 focus:outline-none focus:border-emerald-500">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Menu Navigation -->
+    <div id="mobileMenu" class="hidden fixed inset-0 z-50">
+    <!-- 1. Telón oscuro que cubre y atenúa toda la pantalla de fondo -->
+    <div id="mobileMenuBackdrop" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="document.getElementById('mobileMenu').classList.add('hidden')"></div>
+
+    <!-- 2. Panel blanco del menú (Sólido y elevado) -->
+    <div class="fixed inset-y-0 left-0 w-4/5 max-w-sm bg-white shadow-2xl flex flex-col justify-between p-6 z-10 overflow-y-auto">
+        <div>
+        <div class="flex items-center justify-between pb-6 border-b border-slate-100">
+            <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold">
+                <i class="fa-solid fa-bag-shopping"></i>
+            </div>
+            <span class="font-black text-xl text-slate-900" id="mobileStoreName">RODNEY</span>
+            </div>
+            <button id="closeMobileMenuBtn" class="p-2 text-slate-400 hover:text-slate-700 rounded-lg">
+            <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
+        
+        <nav class="mt-6 flex flex-col space-y-1">
+            <a href="#inicio" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+            <i class="fa-solid fa-house w-5 text-emerald-600"></i> Inicio
+            </a>
+            <a href="#catalogo" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+            <i class="fa-solid fa-store w-5 text-emerald-600"></i> Catálogo Completo
+            </a>
+            <a href="#categorias" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+            <i class="fa-solid fa-layer-group w-5 text-emerald-600"></i> Categorías
+            </a>
+            <a href="#contacto" class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+            <i class="fa-solid fa-envelope w-5 text-emerald-600"></i> Contacto & Horarios
+            </a>
+        </nav>
+        </div>
+
+        <div class="pt-6 border-t border-slate-100">
+        <button id="mobileAdminQuickBtn" class="w-full flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 px-4 rounded-xl transition-colors">
+            <i class="fa-solid fa-lock text-sm"></i> Administrar Productos
+        </button>
+        <p class="text-center text-xs text-slate-400 mt-4">Catálogo con atención vía WhatsApp</p>
+        </div>
+    </div>
+    </div>
+ 
+
+  <!-- Hero Section (Shopify aesthetic) -->
+  <section id="inicio" class="relative overflow-hidden bg-gradient-to-b from-emerald-50/70 via-slate-50 to-white pt-8 pb-16 md:py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+          <div class="inline-flex items-center gap-2 bg-emerald-100/80 border border-emerald-300 text-emerald-800 text-xs font-bold px-3.5 py-1.5 rounded-full shadow-sm">
+            <i class="fa-solid fa-shield-halved text-emerald-600"></i>
+            <span>Presupuestos al instante sin tarjeta de crédito</span>
+          </div>
+
+          <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
+            Elige lo que te gusta, <span class="bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">pídelo directo</span> por WhatsApp.
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
+            Explora nuestra colección selecta con fotos reales y precios actualizados. Agrega los artículos a tu carrito y con un solo toque recibe atención personalizada y cotización formal por WhatsApp.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
+            <a href="#catalogo" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-4 rounded-2xl shadow-lg shadow-emerald-600/30 transition-all hover:scale-[1.02] active:scale-[0.98]">
+              <span>Ver Catálogo</span>
+              <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+            <a href="#contacto" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-100 text-slate-800 font-bold px-7 py-4 rounded-2xl border border-slate-200 transition-all">
+              <i class="fa-solid fa-headset text-emerald-600"></i>
+              <span>Consultar Asesor</span>
+            </a>
+          </div>
+
+          <!-- Trust Badges -->
+          <div class="pt-6 border-t border-slate-200/80 grid grid-cols-3 gap-4 text-center lg:text-left">
+            <div>
+              <p class="text-xl md:text-2xl font-black text-slate-900">100%</p>
+              <p class="text-xs text-slate-500 font-medium">Atención Rápida</p>
+            </div>
+            <div>
+              <p class="text-xl md:text-2xl font-black text-slate-900">Garantía</p>
+              <p class="text-xs text-slate-500 font-medium">Productos Nuevos</p>
+            </div>
+            <div>
+              <p class="text-xl md:text-2xl font-black text-slate-900">Envíos</p>
+              <p class="text-xs text-slate-500 font-medium">A todo el país</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Graphic Display -->
+        <div class="lg:col-span-5 relative">
+          <div class="relative mx-auto max-w-md lg:max-w-none">
+            <!-- Background Glow -->
+            <div class="absolute -inset-4 bg-gradient-to-r from-emerald-500 to-teal-400 rounded-3xl opacity-20 blur-2xl -z-10"></div>
+            
+            <!-- TARJETA DINÁMICA CON EL ID ASIGNADO -->
+            <div id="heroFeaturedCard" class="bg-white rounded-3xl p-4 shadow-2xl border border-slate-100 relative">
+              <!-- Se rellenará automáticamente desde script.js -->
+            </div>
+
+            <!-- Floating Badge -->
+            <div class="absolute -bottom-11 -left-6 bg-white rounded-2xl p-3.5 shadow-xl border border-slate-100 flex items-center gap-3 hidden sm:flex">
+              <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 text-lg">
+                <i class="fa-brands fa-whatsapp"></i>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-900">Cotización con 1 Click</p>
+                <p class="text-[11px] text-slate-500">Sin registros ni contraseñas</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section id="categorias" class="py-12 bg-white border-y border-slate-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
+        <div>
+          <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Explora por colección</span>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-1">Categorías Populares</h2>
+        </div>
+        <p class="text-sm text-slate-500 mt-2 md:mt-0">Filtra rápidamente haciendo clic en cualquier sección</p>
+      </div>
+
+      <!-- Categories Pills / Badges -->
+      <div id="categoriesContainer" class="flex items-center gap-3 overflow-x-auto pb-3 pt-1 no-scrollbar">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Section (Catalog) -->
+  <section id="catalogo" class="py-14 bg-slate-50 min-h-[600px]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Catalog Header & Controls -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 mb-8 border-b border-slate-200">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Nuestros Productos</h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            Mostrando <span id="productCounter" class="font-bold text-emerald-600">0</span> artículos disponibles
+          </p>
+        </div>
+
+        <!-- Sort and Filters -->
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center bg-white rounded-xl border border-slate-200 px-3 py-1.5 shadow-sm">
+            <span class="text-xs font-semibold text-slate-500 mr-2"><i class="fa-solid fa-arrow-down-short-wide mr-1"></i> Ordenar:</span>
+            <select id="sortSelector" class="text-xs sm:text-sm font-semibold text-slate-800 bg-transparent focus:outline-none cursor-pointer">
+              <option value="default">Recomendados</option>
+              <option value="price-asc">Precio: Menor a Mayor</option>
+              <option value="price-desc">Precio: Mayor a Menor</option>
+              <option value="name-asc">Nombre (A - Z)</option>
+            </select>
+          </div>
+
+          <button id="resetFiltersBtn" class="text-xs font-semibold text-slate-600 hover:text-emerald-700 bg-white hover:bg-slate-100 border border-slate-200 px-3 py-2 rounded-xl transition-colors hidden">
+            <i class="fa-solid fa-rotate-left mr-1"></i> Limpiar Filtros
+          </button>
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Dynamically injected product cards -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyCatalogState" class="hidden text-center py-16 bg-white rounded-3xl border border-dashed border-slate-300 p-8">
+        <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto text-2xl mb-4">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <h3 class="text-lg font-bold text-slate-800">No encontramos productos con ese criterio</h3>
+        <p class="text-sm text-slate-500 max-w-md mx-auto mt-1 mb-6">Prueba cambiando los términos de búsqueda o seleccionando otra categoría.</p>
+        <button onclick="resetAllFilters()" class="bg-emerald-600 text-white text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-emerald-700 transition-colors">
+          Mostrar todos los productos
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Contact & Location Section -->
+  <section id="contacto" class="py-16 bg-white border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        
+        <!-- Info Column -->
+        <div class="lg:col-span-5 space-y-6">
+          <div>
+            <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">¿Tienes dudas o necesitas asesoría?</span>
+            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">Estamos para Ayudarte</h2>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+              Atendemos de forma directa y personalizada a través de WhatsApp. También puedes dejarnos tu consulta rápida en el formulario.
+            </p>
+          </div>
+
+          <div class="space-y-4 pt-2">
+            <div class="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+              <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0 text-lg">
+                <i class="fa-brands fa-whatsapp"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-900 text-sm">WhatsApp de Ventas</h4>
+                <p id="contactPhoneDisplay" class="text-xs text-slate-600 font-medium">+595 981 123 456</p>
+                <span class="text-[11px] text-emerald-600 font-semibold">Respuesta usual: menos de 10 min</span>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+              <div class="w-10 h-10 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center flex-shrink-0 text-lg">
+                <i class="fa-solid fa-clock"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-900 text-sm">Horario de Atención</h4>
+                <p class="text-xs text-slate-600 font-medium">Lunes a Sábado: 08:30 - 18:30</p>
+                <p class="text-xs text-slate-600 font-medium">Domingos: 09:00 - 13:00</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+              <div class="w-10 h-10 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center flex-shrink-0 text-lg">
+                <i class="fa-solid fa-location-dot"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-900 text-sm">Ubicación y Entregas</h4>
+                <p class="text-xs text-slate-600 font-medium">Centro Comercial Principal & Despachos a Domicilio</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Quick Message Form -->
+        <div class="lg:col-span-7 bg-slate-50 p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+          <h3 class="text-lg font-extrabold text-slate-900 mb-1">Envía una consulta rápida</h3>
+          <p class="text-xs text-slate-500 mb-6">Te redactaremos el mensaje automáticamente para tu WhatsApp</p>
+
+          <form id="quickContactForm" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">Tu Nombre</label>
+                <input type="text" id="contactName" required placeholder="Ej: Juan Pérez" class="w-full bg-white border border-slate-200 text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-emerald-500">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">Asunto / Pregunta sobre</label>
+                <input type="text" id="contactSubject" required placeholder="Ej: Disponibilidad y envíos" class="w-full bg-white border border-slate-200 text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-emerald-500">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Mensaje o Producto de Interés</label>
+              <textarea id="contactMessage" rows="3" required placeholder="Hola, quisiera saber si tienen stock del producto..." class="w-full bg-white border border-slate-200 text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-emerald-500"></textarea>
+            </div>
+
+            <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold px-6 py-3.5 rounded-xl shadow-md transition-all active:scale-95">
+              <i class="fa-brands fa-whatsapp text-lg"></i>
+              <span>Enviar Consulta a WhatsApp</span>
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-slate-400 py-12 text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-slate-800 pb-8">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center text-slate-950 font-bold">
+            <i class="fa-solid fa-bag-shopping"></i>
+          </div>
+          <span class="text-white font-extrabold text-xl tracking-tight" id="footerStoreName">RODNEY STORE</span>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-6 text-xs font-semibold">
+          <a href="#inicio" class="hover:text-white transition-colors">Inicio</a>
+          <a href="#catalogo" class="hover:text-white transition-colors">Catálogo</a>
+          <a href="#categorias" class="hover:text-white transition-colors">Categorías</a>
+          <a href="#contacto" class="hover:text-white transition-colors">Contacto</a>
+          <button onclick="openAdminModal()" class="text-emerald-400 hover:underline">Acceso Administrador</button>
+        </div>
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+        <p>© 2026 Catálogo Digital Inteligente. Diseñado para ventas por WhatsApp.</p>
+        <p class="flex items-center gap-2">
+          <span>Hecho con</span>
+          <i class="fa-solid fa-heart text-red-500"></i>
+          <a href="https://www.instagram.com/rodney_pereira97/" target="_blank" rel="noopener">Ing. Rodney Pereira</a>  
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Cart Drawer (Slide-Over Shopify Style) -->
+  <div id="cartDrawerBackdrop" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 transition-opacity opacity-0 pointer-events-none duration-300"></div>
+
+  <aside id="cartDrawer" class="fixed top-0 right-0 bottom-0 w-full sm:max-w-md bg-white z-50 shadow-2xl flex flex-col translate-x-full cart-drawer">
+    <!-- Header -->
+    <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">
+          <i class="fa-solid fa-bag-shopping"></i>
+        </div>
+        <div>
+          <h3 class="font-extrabold text-slate-900 text-base">Carrito de Presupuesto</h3>
+          <p class="text-[11px] text-slate-500"><span id="drawerItemCount">0</span> artículos seleccionados</p>
+        </div>
+      </div>
+      <button id="closeCartBtn" class="p-2 text-slate-400 hover:text-slate-700 rounded-lg" aria-label="Cerrar carrito">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+    </div>
+
+    <!-- Items List Container -->
+    <div id="cartItemsList" class="flex-1 overflow-y-auto p-5 space-y-4">
+      <!-- Injected Cart Items -->
+    </div>
+
+    <!-- Empty Cart Template -->
+    <div id="cartEmptyState" class="hidden flex-1 flex flex-col items-center justify-center p-8 text-center">
+      <div class="w-20 h-20 rounded-3xl bg-slate-100 text-slate-400 flex items-center justify-center text-3xl mb-4">
+        <i class="fa-solid fa-cart-arrow-down"></i>
+      </div>
+      <h4 class="font-bold text-slate-800 text-lg">Tu carrito está vacío</h4>
+      <p class="text-xs text-slate-500 max-w-xs mt-1 mb-6">Aún no has seleccionado ningún producto de nuestro catálogo para tu presupuesto.</p>
+      <button onclick="closeCart(); location.href='#catalogo';" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-6 py-3 rounded-xl transition-all">
+        Explorar Productos
+      </button>
+    </div>
+
+    <!-- Footer / Checkout Trigger -->
+    <div id="cartFooter" class="p-5 border-t border-slate-100 bg-slate-50/80 space-y-3">
+      <div class="space-y-1.5">
+        <div class="flex justify-between text-xs text-slate-500">
+          <span>Subtotal estimado:</span>
+          <span id="cartSubtotal">$ 0</span>
+        </div>
+        <div class="flex justify-between text-sm font-extrabold text-slate-900 pt-1 border-t border-slate-200">
+          <span>Total Presupuesto:</span>
+          <span id="cartTotal" class="text-emerald-600 text-base">$ 0</span>
+        </div>
+      </div>
+
+      <div class="bg-emerald-50 rounded-xl p-2.5 border border-emerald-200/80 text-[11px] text-emerald-800 flex items-center gap-2">
+        <i class="fa-brands fa-whatsapp text-emerald-600 text-base"></i>
+        <span>Los precios finales e información de entrega se confirmarán vía WhatsApp.</span>
+      </div>
+
+      <button id="openCheckoutModalBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 transition-all active:scale-[0.99]">
+        <span>Continuar y Enviar a WhatsApp</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+
+      <button onclick="clearCart()" class="w-full text-center text-xs text-red-500 hover:text-red-700 py-1 transition-colors">
+        Vaciar Carrito
+      </button>
+    </div>
+  </aside>
+
+  <!-- Quick View Product Modal -->
+  <div id="quickViewModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative border border-slate-100 scale-95 transition-transform duration-200" id="quickViewContent">
+      <button onclick="closeQuickView()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white/80 backdrop-blur-md shadow-sm border border-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="grid grid-cols-1 md:grid-cols-2">
+        <div class="relative aspect-square bg-slate-100 md:rounded-l-3xl overflow-hidden">
+          <img id="qvImage" src="" alt="Vista Previa" class="w-full h-full object-cover">
+          <span id="qvBadge" class="absolute top-3 left-3 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md text-white"></span>
+        </div>
+
+        <div class="p-6 md:p-8 flex flex-col justify-between">
+          <div>
+            <span id="qvCategory" class="text-xs font-bold text-emerald-600 uppercase tracking-wider"></span>
+            <h3 id="qvTitle" class="text-xl font-extrabold text-slate-900 mt-1 mb-2"></h3>
+            <div class="flex items-baseline gap-2 mb-4">
+              <span id="qvPrice" class="text-2xl font-black text-slate-900"></span>
+              <span id="qvOldPrice" class="text-sm font-medium text-slate-400 line-through"></span>
+            </div>
+            <p id="qvDescription" class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6"></p>
+          </div>
+
+          <div class="space-y-4 pt-4 border-t border-slate-100">
+            <div class="flex items-center gap-3">
+              <span class="text-xs font-bold text-slate-700">Cantidad:</span>
+              <div class="flex items-center border border-slate-200 rounded-xl bg-slate-50">
+                <button onclick="adjustQvQty(-1)" class="px-3 py-1.5 text-slate-600 hover:text-slate-900"><i class="fa-solid fa-minus text-xs"></i></button>
+                <span id="qvQty" class="px-3 text-xs font-bold text-slate-900">1</span>
+                <button onclick="adjustQvQty(1)" class="px-3 py-1.5 text-slate-600 hover:text-slate-900"><i class="fa-solid fa-plus text-xs"></i></button>
+              </div>
+            </div>
+
+            <button id="qvAddToCartBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm py-3 px-4 rounded-xl shadow-md transition-all">
+              <i class="fa-solid fa-cart-plus mr-2"></i> Agregar al Carrito
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout & Anti-Robot Modal -->
+  <div id="checkoutModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="bg-white rounded-3xl max-w-lg w-full max-h-[95vh] overflow-y-auto shadow-2xl p-6 sm:p-8 relative border border-slate-100">
+      
+      <button onclick="closeCheckoutModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg">
+          <i class="fa-brands fa-whatsapp"></i>
+        </div>
+        <div>
+          <h3 class="text-lg font-black text-slate-900">Enviar Pedido a WhatsApp</h3>
+          <p class="text-xs text-slate-500">Completa tus datos para personalizar el pedido</p>
+        </div>
+      </div>
+
+      <form id="checkoutForm" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Nombre Completo *</label>
+          <input type="text" id="custName" required placeholder="Ej: Carolina Benítez" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Teléfono Móvil *</label>
+            <input type="tel" id="custPhone" required placeholder="Ej: 0981 123 456" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-emerald-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Ciudad / Barrio *</label>
+            <input type="text" id="custCity" required placeholder="Ej: Asunción / Luque" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-emerald-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Dirección de Entrega (Opcional)</label>
+          <input type="text" id="custAddress" placeholder="Calle, nro de casa o referencias" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Nota o Comentario (Opcional)</label>
+          <textarea id="custNotes" rows="2" placeholder="Ej: Horario preferido, si necesitan factura con RUC, etc." class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl px-4 py-2 focus:outline-none focus:border-emerald-500"></textarea>
+        </div>
+
+        <!-- Order Summary Pill -->
+        <div class="bg-slate-100/90 rounded-2xl p-3 flex items-center justify-between text-xs">
+          <span class="text-slate-600 font-medium">Total de tu selección:</span>
+          <span id="checkoutTotalSum" class="font-extrabold text-emerald-700 text-sm">$ 0</span>
+        </div>
+
+        <!-- Custom Interactive Anti-Robot Verification Widget -->
+        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <button type="button" id="captchaBox" onclick="triggerCaptchaVerification()" class="w-7 h-7 rounded-lg border-2 border-slate-300 bg-white flex items-center justify-center transition-all hover:border-emerald-500 cursor-pointer focus:outline-none">
+              <i id="captchaSpinner" class="fa-solid fa-circle-notch fa-spin text-emerald-600 text-sm hidden"></i>
+              <i id="captchaCheck" class="fa-solid fa-check text-emerald-600 text-sm font-black hidden"></i>
+            </button>
+            <label for="captchaBox" class="text-xs font-semibold text-slate-700 cursor-pointer select-none">
+              No soy un robot
+            </label>
+          </div>
+          <div class="flex flex-col items-center">
+            <i class="fa-solid fa-shield-cat text-slate-400 text-base"></i>
+            <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Seguridad</span>
+          </div>
+        </div>
+        <p id="captchaNotice" class="text-[11px] text-amber-600 hidden font-medium text-center">
+          <i class="fa-solid fa-circle-exclamation mr-1"></i> Por favor marca la casilla de verificación anti-robot.
+        </p>
+
+        <!-- Submit Button -->
+        <button type="submit" id="sendWhatsAppOrderBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm py-3.5 rounded-xl shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 transition-all">
+          <i class="fa-brands fa-whatsapp text-lg"></i>
+          <span>Enviar Presupuesto Ahora</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+ <!-- Modal de Administración -->
+<div id="adminModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+  
+  <!-- Contenedor con ancho dinámico (Inicia en max-w-[400px] para el login) -->
+  <div id="adminModalBox" class="bg-white rounded-3xl w-full max-w-[400px] overflow-hidden shadow-2xl border border-slate-100 transition-all duration-300 max-h-[90vh] flex flex-col relative">
+
+    <!-- ==========================================
+         VISTA 1: LOGIN COMPACTO (Estilo Tarjeta Moderna)
+         ========================================== -->
+    <div id="adminLoginGate" class="p-8">
+      <!-- Botón X para cerrar -->
+      <button onclick="closeAdminModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100 transition-colors" title="Cerrar">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+
+      <!-- Encabezado / Ícono -->
+      <div class="text-center mb-6">
+        <div class="w-12 h-12 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto text-xl mb-3 shadow-sm">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h3 class="text-base font-black text-slate-900 tracking-tight">Acceso Administrativo</h3>
+        <p class="text-xs text-slate-500 mt-1">Ingresa tus credenciales para gestionar la tienda</p>
+      </div>
+
+      <!-- Formulario compacto -->
+      <form onsubmit="event.preventDefault(); handleAdminLogin();" class="space-y-4">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Correo Electrónico</label>
+          <div class="relative">
+            <i class="fa-regular fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input 
+              type="email" 
+              id="adminEmailInput" 
+              required 
+              placeholder="admin@mitienda.com" 
+              class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl pl-9 pr-3.5 py-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/10 transition-all"
+            >
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Contraseña</label>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input 
+              type="password" 
+              id="adminPasswordInput" 
+              required 
+              placeholder="••••••••" 
+              class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl pl-9 pr-3.5 py-3 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/10 transition-all"
+            >
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          id="adminLoginBtn" 
+          class="w-full mt-2 bg-slate-900 hover:bg-emerald-600 text-white font-bold text-xs py-3 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 active:scale-[0.99]"
+        >
+          <span>Iniciar Sesión</span>
+          <i class="fa-solid fa-arrow-right text-[11px]"></i>
+        </button>
+      </form>
+
+      <div class="mt-6 pt-4 border-t border-slate-100 text-center">
+        <span class="text-[10px] text-slate-400 font-medium tracking-wide">
+          <i class="fa-solid fa-lock mr-1"></i> Sesión segura con Supabase Auth
+        </span>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         VISTA 2: DASHBOARD COMPLETO (Se activa tras iniciar sesión)
+         ========================================== -->
+    <!-- Contenedor con altura fija y flexbox garantizado -->
+    <div id="adminDashboardBody" class="hidden flex flex-col overflow-hidden" style="height: 85vh; max-height: 85vh;">
+      
+      <!-- Encabezado Oscuro del Dashboard (Fijo arriba) -->
+      <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between border-b border-slate-800 flex-shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+            <i class="fa-solid fa-sliders text-sm"></i>
+          </div>
+          <div>
+            <h3 class="text-xs sm:text-sm font-bold">Panel de Administración</h3>
+            <p class="text-[10px] text-slate-400">Catálogo, imágenes y configuraciones</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="handleAdminLogout()" class="text-xs bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg transition-colors" title="Cerrar sesión">
+            <i class="fa-solid fa-right-from-bracket mr-1"></i> Salir
+          </button>
+          <button onclick="closeAdminModal()" class="text-slate-400 hover:text-white p-1.5 rounded-lg">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Pestañas (Tabs fijas) -->
+      <div class="flex border-b border-slate-200 bg-white px-6 flex-shrink-0">
+        <button id="tabBtnProducts" onclick="switchAdminTab('products')" class="px-4 py-2.5 font-bold text-xs border-b-2 border-emerald-600 text-emerald-700">
+          <i class="fa-solid fa-box mr-1.5"></i> Productos
+        </button>
+        <button id="tabBtnCategories" onclick="switchAdminTab('categories')" class="px-4 py-2.5 font-bold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800">
+          <i class="fa-solid fa-layer-group mr-1.5"></i> Categorías
+        </button>
+        <button id="tabBtnSettings" onclick="switchAdminTab('settings')" class="px-4 py-2.5 font-bold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800">
+          <i class="fa-solid fa-gear mr-1.5"></i> Configuración
+        </button>
+      </div>
+
+      <!-- Tab 1: Products Management (ESTA SECCIÓN AHORA TIENE SCROLL LIBRE) -->
+      <div id="tabContentProducts" class="p-6 space-y-6" style="flex: 1 1 auto; min-height: 0; overflow-y: auto;">
+        
+        <!-- Add/Edit Product Box -->
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200">
+          <div class="flex items-center justify-between mb-4">
+            <h4 id="productFormTitle" class="text-sm font-extrabold text-slate-900">
+              <i class="fa-solid fa-plus-circle text-emerald-600 mr-1.5"></i> Agregar Nuevo Producto
+            </h4>
+            <button id="cancelEditBtn" onclick="resetProductForm()" class="text-xs text-slate-500 hover:text-slate-800 font-semibold hidden">
+              Cancelar Edición
+            </button>
+          </div>
+
+          <form id="productManageForm" class="space-y-4">
+            <input type="hidden" id="editProductId">
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div class="sm:col-span-2">
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">Nombre del Producto *</label>
+                <input type="text" id="formProdName" required placeholder="Ej: Zapatillas Urban Pro" class="w-full bg-white border border-slate-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500">
+              </div>
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block text-[11px] font-bold text-slate-700">Categoría *</label>
+                  <button type="button" onclick="switchAdminTab('categories')" class="text-[10px] text-emerald-600 hover:underline font-semibold">
+                    + Gestionar
+                  </button>
+                </div>
+                <select id="formProdCategory" required class="w-full bg-white border border-slate-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500">
+                  <option value="">-- Seleccionar categoría --</option>
+                  <!-- Se llena dinámicamente -->
+                </select>
+              </div>
+            </div>
+
+            <!-- Grilla de 4 columnas: Precios, Descuento Mayorista y Badge -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">Precio Actual *</label>
+                <input type="number" id="formProdPrice" required min="0" step="any" placeholder="Ej: 150000" class="w-full bg-white border border-slate-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500">
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">Precio Anterior (Tachado)</label>
+                <input type="number" id="formProdOldPrice" min="0" step="any" placeholder="Ej: 180000" class="w-full bg-white border border-slate-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500">
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">
+                  Desc. Mayorista % <span class="text-emerald-600 font-normal">(≥10 un.)</span>
+                </label>
+                <input type="number" id="formProdWholesale" min="0" max="100" step="1" value="0" placeholder="Ej: 15" class="w-full bg-white border border-slate-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500">
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">Etiqueta Badge</label>
+                <select id="formProdBadge" class="w-full bg-white border border-slate-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500">
+                  <option value="">Sin Etiqueta</option>
+                  <option value="Nuevo">Nuevo</option>
+                  <option value="Oferta">Oferta</option>
+                  <option value="Más Vendido">Más Vendido</option>
+                  <option value="Limitado">Edición Limitada</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">Descripción Breve *</label>
+              <textarea id="formProdDesc" rows="2" required placeholder="Características principales del producto..." class="w-full bg-white border border-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-emerald-500"></textarea>
+            </div>
+
+            <!-- Image Input Options -->
+            <div class="p-3 bg-white rounded-xl border border-slate-200 space-y-2">
+              <label class="block text-[11px] font-bold text-slate-700">Imagen del Producto (URL o Cargar desde tu dispositivo)</label>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <input type="url" id="formProdImgUrl" placeholder="https://ejemplo.com/foto.jpg" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500">
+                  <span class="text-[10px] text-slate-400">Pega un enlace web directo de imagen</span>
+                </div>
+                <div>
+                  <input type="file" id="formProdImgFile" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer">
+                  <span class="text-[10px] text-slate-400">O sube una imagen de tu galería</span>
+                </div>
+              </div>
+
+              <!-- Preview thumbnail -->
+              <div id="imagePreviewContainer" class="hidden items-center gap-3 pt-2">
+                <img id="formImgPreview" src="" alt="Previsualización" class="w-12 h-12 rounded-lg object-cover border border-slate-200">
+                <span class="text-xs text-emerald-600 font-medium"><i class="fa-solid fa-check mr-1"></i> Imagen lista para guardar</span>
+              </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2">
+              <button type="submit" id="saveProductBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-md transition-all">
+                <i class="fa-solid fa-floppy-disk mr-1"></i> Guardar Producto
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Existing Products Table -->
+        <!-- Existing Products Table con Buscador y Paginador -->
+        <div class="mt-8">
+          <!-- Barra superior: Título y Buscador -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+            <div class="flex items-center gap-2">
+              <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                Productos Registrados (<span id="adminTotalProdCount">0</span>)
+              </h4>
+            </div>
+
+            <!-- Buscador interno de la tabla -->
+            <div class="relative w-full sm:w-64">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+              <input 
+                type="text" 
+                id="adminSearchInput" 
+                oninput="handleAdminSearch(this.value)" 
+                placeholder="Buscar por nombre o categoría..." 
+                class="w-full bg-white border border-slate-200 text-xs rounded-xl pl-8 pr-3 py-2 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all shadow-sm"
+              >
+            </div>
+          </div>
+
+          <!-- Tabla de Productos -->
+          <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs text-slate-600">
+                <thead class="bg-slate-50 text-[11px] font-bold text-slate-700 border-b border-slate-200">
+                  <tr>
+                    <th class="p-3">Foto</th>
+                    <th class="p-3">Nombre & Categoría</th>
+                    <th class="p-3">Precio</th>
+                    <th class="p-3">Mayorista (≥10)</th>
+                    <th class="p-3">Badge</th>
+                    <th class="p-3 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="adminProductsTableBody" class="divide-y divide-slate-100">
+                  <!-- Se genera dinámicamente -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Barra Inferior de Paginación -->
+            <div id="adminPaginationContainer" class="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 bg-slate-50 border-t border-slate-200">
+              <span id="adminPaginationInfo" class="text-[11px] font-medium text-slate-500">
+                Mostrando 0 de 0 productos
+              </span>
+              <div id="adminPaginationButtons" class="flex items-center gap-1.5">
+                <!-- Botones inyectados dinámicamente -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ========================================================
+           TAB NUEVO: GESTIÓN DE CATEGORÍAS
+           ======================================================== -->
+      <div id="tabContentCategories" class="hidden p-6 space-y-6" style="flex: 1 1 auto; min-height: 0; overflow-y: auto;">
+        
+        <!-- Formulario para agregar categoría -->
+        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 max-w-lg">
+          <h4 class="text-sm font-extrabold text-slate-900 mb-3 flex items-center gap-1.5">
+            <i class="fa-solid fa-folder-plus text-emerald-600"></i> Nueva Categoría
+          </h4>
+          <form onsubmit="handleCreateCategory(event)" class="flex gap-2">
+            <input 
+              type="text" 
+              id="newCategoryName" 
+              required 
+              placeholder="Ej: Auriculares, Calzado, Hogar..." 
+              class="flex-1 bg-white border border-slate-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500"
+            >
+            <button type="submit" id="saveCatBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-1.5">
+              <i class="fa-solid fa-plus"></i> Agregar
+            </button>
+          </form>
+        </div>
+
+        <!-- Lista de categorías existentes -->
+        <div class="max-w-lg">
+          <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">
+            Categorías Activas (<span id="catTotalCount">0</span>)
+          </h4>
+          <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+            <ul id="adminCategoriesList" class="divide-y divide-slate-100 text-xs">
+              <!-- Se genera dinámicamente -->
+            </ul>
+          </div>
+        </div>
+
+      </div>
+      <!-- Tab 2: Store Settings (TAMBIÉN CON SCROLL) -->
+      <div id="tabContentSettings" class="hidden p-6 space-y-6" style="flex: 1 1 auto; min-height: 0; overflow-y: auto;">
+        <form id="storeSettingsForm" class="max-w-xl space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nombre de la Tienda</label>
+            <input type="text" id="settingStoreName" class="w-full bg-white border border-slate-200 text-xs rounded-xl px-4 py-2.5 focus:outline-none focus:border-emerald-500">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Número de WhatsApp para Presupuestos *</label>
+            <input type="text" id="settingWhatsApp" placeholder="Ej: 595981123456" class="w-full bg-white border border-slate-200 text-xs rounded-xl px-4 py-2.5 focus:outline-none focus:border-emerald-500">
+            <p class="text-[10px] text-slate-500 mt-1">Escribe el número con código de país sin espacios ni '+'</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Símbolo de Moneda</label>
+              <input type="text" id="settingCurrency" placeholder="Ej: Gs., $, USD, €" class="w-full bg-white border border-slate-200 text-xs rounded-xl px-4 py-2.5 focus:outline-none focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Nueva Contraseña</label>
+              <input type="text" id="settingAdminPass" placeholder="Dejar vacío para no cambiar" class="w-full bg-white border border-slate-200 text-xs rounded-xl px-4 py-2.5 focus:outline-none focus:border-emerald-500">
+            </div>
+          </div>
+          
+          <div class="space-y-1">
+            <label class="block text-[11px] font-bold text-slate-700">Producto Destacado del Mes</label>
+            <select id="settingFeaturedProduct" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500">
+              <option value="">-- Seleccionar producto --</option>
+            </select>
+            <span class="text-[10px] text-slate-400">Aparecerá en la tarjeta principal de la portada.</span>
+          </div>
+
+          <div class="pt-3">
+            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-6 py-3 rounded-xl shadow-md transition-all">
+              <i class="fa-solid fa-floppy-disk mr-1"></i> Guardar Ajustes de Tienda
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+    </div>
+  </div>
+
+  <!-- Mobile Bottom App Bar (Native App Style) -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-4 py-2 flex items-center justify-around shadow-lg">
+    <a href="#inicio" class="flex flex-col items-center text-slate-500 hover:text-emerald-600 transition-colors">
+      <i class="fa-solid fa-house text-lg"></i>
+      <span class="text-[10px] font-semibold mt-0.5">Inicio</span>
+    </a>
+    <a href="#catalogo" class="flex flex-col items-center text-slate-500 hover:text-emerald-600 transition-colors">
+      <i class="fa-solid fa-boxes-stacked text-lg"></i>
+      <span class="text-[10px] font-semibold mt-0.5">Catálogo</span>
+    </a>
+    <button onclick="toggleCart()" class="relative flex flex-col items-center text-emerald-600">
+      <div class="w-10 h-10 -mt-5 bg-emerald-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-emerald-600/30">
+        <i class="fa-solid fa-cart-shopping text-sm"></i>
+      </div>
+      <span id="mobileBottomCartBadge" class="absolute -top-6 right-0 bg-slate-900 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+      <span class="text-[10px] font-bold mt-1 text-emerald-700">Carrito</span>
+    </button>
+    <a href="#contacto" class="flex flex-col items-center text-slate-500 hover:text-emerald-600 transition-colors">
+      <i class="fa-solid fa-comments text-lg"></i>
+      <span class="text-[10px] font-semibold mt-0.5">Contacto</span>
+    </a>
+    <button onclick="openAdminModal()" class="flex flex-col items-center text-slate-500 hover:text-slate-800 transition-colors">
+      <i class="fa-solid fa-gear text-lg"></i>
+      <span class="text-[10px] font-semibold mt-0.5">Admin</span>
+    </button>
+  </nav>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed bottom-20 md:bottom-6 right-4 sm:right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Custom Confirmation Dialog (Never use alert or confirm) -->
+  <div id="customConfirmModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-slate-100 text-center space-y-4">
+      <div id="confirmIcon" class="w-12 h-12 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mx-auto text-xl">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <div>
+        <h4 id="confirmTitle" class="font-bold text-slate-900 text-base">¿Estás seguro?</h4>
+        <p id="confirmMessage" class="text-xs text-slate-500 mt-1">Esta acción no se puede deshacer.</p>
+      </div>
+      <div class="flex items-center gap-2 pt-2">
+        <button id="confirmCancelBtn" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2.5 rounded-xl transition-colors">
+          Cancelar
+        </button>
+        <button id="confirmAcceptBtn" class="flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2.5 rounded-xl transition-colors">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+</html>
