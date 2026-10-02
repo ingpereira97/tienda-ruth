@@ -717,12 +717,9 @@
         <button id="tabBtnInstallments" onclick="switchAdminTab('installments')" class="px-4 py-2.5 font-bold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
           <i class="fa-solid fa-calculator mr-1.5"></i> Simulador de Cuotas
         </button>
-<<<<<<< HEAD
         <button id="tabBtnClients" onclick="switchAdminTab('clients')" class="px-4 py-2.5 font-bold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
           <i class="fa-solid fa-users mr-1.5"></i> Clientes
         </button>
-=======
->>>>>>> 0ac781e0b04473c871cc7a3fdaa8b0e25a7831d2
         <button id="tabBtnSettings" onclick="switchAdminTab('settings')" class="px-4 py-2.5 font-bold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800">
           <i class="fa-solid fa-gear mr-1.5"></i> Configuración
         </button>
@@ -997,111 +994,6 @@
         </div>
 
       </div>
-<<<<<<< HEAD
-      <!-- ========================================================
-           TAB NUEVO: GESTIÓN DE CLIENTES (CRM)
-           ======================================================== -->
-      <div id="tabContentClients" class="hidden p-6 space-y-6" style="flex: 1 1 auto; min-height: 0; overflow-y: auto;">
-        
-        <!-- Formulario Agregar / Editar Cliente -->
-        <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200">
-          <div class="flex items-center justify-between mb-4">
-            <h4 id="clientFormTitle" class="text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
-              <i class="fa-solid fa-user-plus text-emerald-600"></i> Registrar Nuevo Cliente
-            </h4>
-            <button id="cancelEditClientBtn" onclick="resetClientForm()" class="text-xs text-slate-500 hover:text-slate-800 font-semibold hidden">
-              Cancelar Edición
-            </button>
-          </div>
-
-          <form id="clientManageForm" onsubmit="handleSaveClient(event)" class="space-y-4">
-            <input type="hidden" id="editClientId">
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div>
-                <label class="block text-[11px] font-bold text-slate-700 mb-1">Nombre Completo *</label>
-                <input type="text" id="formClientName" required placeholder="Ej: Juan Pérez" class="w-full bg-white border border-slate-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500">
-              </div>
-              <div>
-                <label class="block text-[11px] font-bold text-slate-700 mb-1">Teléfono / WhatsApp *</label>
-                <input type="text" id="formClientPhone" required placeholder="Ej: 595981234567" class="w-full bg-white border border-slate-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500">
-              </div>
-              <div>
-                <label class="block text-[11px] font-bold text-slate-700 mb-1">Tipo de Cliente</label>
-                <select id="formClientCategory" class="w-full bg-white border border-slate-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500">
-                  <option value="Minorista">Minorista</option>
-                  <option value="Mayorista">Mayorista (≥10 un.)</option>
-                  <option value="Cuotas">Plan a Cuotas</option>
-                  <option value="Frecuente">Cliente Frecuente</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block text-[11px] font-bold text-slate-700 mb-1">Ciudad / Barrio</label>
-                <input type="text" id="formClientCity" placeholder="Ej: Luque, Asunción, San Lorenzo..." class="w-full bg-white border border-slate-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500">
-              </div>
-              <div>
-                <label class="block text-[11px] font-bold text-slate-700 mb-1">Dirección de Entrega / Referencia</label>
-                <input type="text" id="formClientAddress" placeholder="Ej: Av. Corrales c/ Gral. Aquino" class="w-full bg-white border border-slate-200 text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-emerald-500">
-              </div>
-            </div>
-
-            <div>
-              <label class="block text-[11px] font-bold text-slate-700 mb-1">Observaciones / Historial</label>
-              <textarea id="formClientNotes" rows="2" placeholder="Ej: Compró 1 Sandisk de 16GB. Paga cuotas del 1 al 5 de cada mes." class="w-full bg-white border border-slate-200 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-emerald-500"></textarea>
-            </div>
-
-            <div class="flex justify-end gap-2 pt-2">
-              <button type="submit" id="saveClientBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-md transition-all flex items-center gap-1.5">
-                <i class="fa-solid fa-floppy-disk"></i> Guardar Cliente
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Tabla y Buscador de Clientes -->
-        <div>
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
-              Clientes Registrados (<span id="totalClientsCount">0</span>)
-            </h4>
-            <div class="relative w-full sm:w-64">
-              <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-              <input 
-                type="text" 
-                id="clientSearchInput" 
-                oninput="handleClientSearch(this.value)" 
-                placeholder="Buscar por nombre, tel. o ciudad..." 
-                class="w-full bg-white border border-slate-200 text-xs rounded-xl pl-8 pr-3 py-2 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 shadow-sm"
-              >
-            </div>
-          </div>
-
-          <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs text-slate-600">
-                <thead class="bg-slate-50 text-[11px] font-bold text-slate-700 border-b border-slate-200">
-                  <tr>
-                    <th class="p-3">Cliente</th>
-                    <th class="p-3">Ubicación</th>
-                    <th class="p-3">Tipo</th>
-                    <th class="p-3">Notas</th>
-                    <th class="p-3 text-right">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody id="clientsTableBody" class="divide-y divide-slate-100">
-                  <!-- Se llena dinámicamente -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-      </div>
-=======
->>>>>>> 0ac781e0b04473c871cc7a3fdaa8b0e25a7831d2
       <!-- Tab 2: Store Settings (TAMBIÉN CON SCROLL) -->
       <div id="tabContentSettings" class="hidden p-6 space-y-6" style="flex: 1 1 auto; min-height: 0; overflow-y: auto;">
         <form id="storeSettingsForm" class="max-w-xl space-y-4">

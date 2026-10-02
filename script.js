@@ -1727,9 +1727,6 @@ function deleteClient(id, name) {
     }
   });
 }
-
-=======
->>>>>>> 0ac781e0b04473c871cc7a3fdaa8b0e25a7831d2
 // Inicialización
 window.addEventListener('DOMContentLoaded', () => {
   applyStoreConfigUI();
@@ -1739,9 +1736,6 @@ window.addEventListener('DOMContentLoaded', () => {
   fetchStoreConfigFromCloud();
   fetchProductsFromCloud();
   fetchCategoriesFromCloud();
-<<<<<<< HEAD
   fetchClientsFromCloud();
-=======
->>>>>>> 0ac781e0b04473c871cc7a3fdaa8b0e25a7831d2
   checkAdminUrlAccess();
 });
