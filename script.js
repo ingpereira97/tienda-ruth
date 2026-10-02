@@ -790,10 +790,12 @@ function switchAdminTab(tab) {
   const tabs = {
     products: { btn: 'tabBtnProducts', content: 'tabContentProducts' },
     categories: { btn: 'tabBtnCategories', content: 'tabContentCategories' },
+    installments: { btn: 'tabBtnInstallments', content: 'tabContentInstallments' },
     settings: { btn: 'tabBtnSettings', content: 'tabContentSettings' }
   };
 
   Object.keys(tabs).forEach(key => {
+    const tabObj = tabs[key];
     const btn = document.getElementById(tabs[key].btn);
     const content = document.getElementById(tabs[key].content);
 
@@ -808,8 +810,10 @@ function switchAdminTab(tab) {
     }
   });
 
-  if (tab === 'categories') {
-    renderCategoriesAdmin();
+  if (tab === 'categories') renderCategoriesAdmin();
+  if (tab === 'installments') {
+    populateInstallmentsProductSelect();
+    calculateInstallmentsTable();
   }
 }
 
@@ -991,6 +995,11 @@ function renderAdminProductsTable() {
   const countEl = document.getElementById('adminTotalProdCount');
   const infoEl = document.getElementById('adminPaginationInfo');
   const buttonsEl = document.getElementById('adminPaginationButtons');
+
+  // Sincroniza la lista desplegable de la calculadora de cuotas
+  if (typeof populateInstallmentsProductSelect === 'function') {
+    populateInstallmentsProductSelect();
+  }
 
   if (!tbody) return;
 
@@ -1394,6 +1403,126 @@ function deleteCategory(catId, catName, prodCount) {
         showToast('Error al eliminar categoría', 'error');
       }
     }
+  });
+}
+// ========================================================
+// MÓDULO PRIVADO: SIMULADOR DE CUOTAS ADMIN
+// ========================================================
+
+// 1. Carga los productos registrados en el desplegable de la calculadora
+function populateInstallmentsProductSelect() {
+  const select = document.getElementById('calcProductSelect');
+  if (!select) return;
+
+  const currentVal = select.value;
+  select.innerHTML = '<option value="">-- Ingresar monto manual --</option>' + 
+    products.map(p => `
+      <option value="${p.id}">${p.name} - ${formatCurrency(p.price)}</option>
+    `).join('');
+
+  if (currentVal) select.value = currentVal;
+}
+
+// 2. Al seleccionar un producto, copia su precio automáticamente al campo de cálculo
+function onSelectProductForInstallment(productId) {
+  const basePriceInput = document.getElementById('calcBasePrice');
+  if (!productId) {
+    if (basePriceInput) basePriceInput.value = '';
+    calculateInstallmentsTable();
+    return;
+  }
+
+  const prod = products.find(p => p.id === productId);
+  if (prod && basePriceInput) {
+    basePriceInput.value = prod.price;
+    calculateInstallmentsTable();
+  }
+}
+
+// 3. Genera la tabla matemática de cuotas
+function calculateInstallmentsTable() {
+  const tbody = document.getElementById('installmentsResultTableBody');
+  const basePrice = parseFloat(document.getElementById('calcBasePrice')?.value) || 0;
+  const interestPerQuota = parseFloat(document.getElementById('calcInterestRate')?.value) || 0;
+  const maxQuotas = parseInt(document.getElementById('calcMaxQuotas')?.value, 10) || 6;
+
+  if (!tbody) return;
+
+  if (basePrice <= 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="4" class="p-6 text-center text-slate-400">
+          Selecciona un producto o escribe un monto al contado para simular las cuotas.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  let html = '';
+
+  // Fila 1: Precio Contado base
+  html += `
+    <tr class="bg-emerald-50/40">
+      <td class="p-3 font-bold text-slate-800">1 cuota (Contado)</td>
+      <td class="p-3 text-slate-500">Sin recargo (0%)</td>
+      <td class="p-3 font-bold text-emerald-700">${formatCurrency(basePrice)}</td>
+      <td class="p-3 font-extrabold text-slate-900">${formatCurrency(basePrice)}</td>
+    </tr>
+  `;
+
+  // Filas de cuotas financiadas (desde 2 hasta maxQuotas)
+  for (let q = 2; q <= maxQuotas; q++) {
+    const totalSurchargePct = q * interestPerQuota; // Ej: 3 cuotas * 5% = 15%
+    const totalAmount = Math.round(basePrice * (1 + totalSurchargePct / 100));
+    const quotaAmount = Math.round(totalAmount / q);
+
+    html += `
+      <tr class="hover:bg-slate-50 transition-colors">
+        <td class="p-3 font-bold text-slate-800">${q} cuotas</td>
+        <td class="p-3 text-amber-700 font-medium">+${totalSurchargePct}%</td>
+        <td class="p-3 font-bold text-emerald-600">${formatCurrency(quotaAmount)}</td>
+        <td class="p-3 font-bold text-slate-900">${formatCurrency(totalAmount)}</td>
+      </tr>
+    `;
+  }
+
+  tbody.innerHTML = html;
+}
+
+// 4. Copia un resumen listo para enviar por WhatsApp al cliente
+function copyInstallmentsBudget() {
+  const basePrice = parseFloat(document.getElementById('calcBasePrice')?.value) || 0;
+  const interestPerQuota = parseFloat(document.getElementById('calcInterestRate')?.value) || 0;
+  const maxQuotas = parseInt(document.getElementById('calcMaxQuotas')?.value, 10) || 6;
+  const productSelect = document.getElementById('calcProductSelect');
+  
+  if (basePrice <= 0) {
+    showToast('Ingresa un monto al contado primero', 'error');
+    return;
+  }
+
+  const selectedProdName = productSelect && productSelect.value 
+    ? products.find(p => p.id === productSelect.value)?.name 
+    : 'el producto consultado';
+
+  let msg = `Hola! Te paso las opciones de pago para *${selectedProdName}*:\n\n`;
+  msg += `💵 *Contado:* ${formatCurrency(basePrice)}\n\n`;
+  msg += `💳 *Planes de Cuotas:*\n`;
+
+  for (let q = 2; q <= maxQuotas; q++) {
+    const totalSurchargePct = q * interestPerQuota;
+    const totalAmount = Math.round(basePrice * (1 + totalSurchargePct / 100));
+    const quotaAmount = Math.round(totalAmount / q);
+    msg += `• *${q} cuotas* de *${formatCurrency(quotaAmount)}* (Total: ${formatCurrency(totalAmount)})\n`;
+  }
+
+  msg += `\nCualquier consulta estamos a las órdenes para coordinar la entrega!`;
+
+  navigator.clipboard.writeText(msg).then(() => {
+    showToast('Presupuesto copiado. ¡Listo para pegar en WhatsApp!');
+  }).catch(() => {
+    showToast('Error al copiar al portapapeles', 'error');
   });
 }
 
