@@ -791,10 +791,7 @@ function switchAdminTab(tab) {
     products: { btn: 'tabBtnProducts', content: 'tabContentProducts' },
     categories: { btn: 'tabBtnCategories', content: 'tabContentCategories' },
     installments: { btn: 'tabBtnInstallments', content: 'tabContentInstallments' },
-<<<<<<< HEAD
     clients: { btn: 'tabBtnClients', content: 'tabContentClients' },
-=======
->>>>>>> 0ac781e0b04473c871cc7a3fdaa8b0e25a7831d2
     settings: { btn: 'tabBtnSettings', content: 'tabContentSettings' }
   };
 
@@ -819,12 +816,9 @@ function switchAdminTab(tab) {
     populateInstallmentsProductSelect();
     calculateInstallmentsTable();
   }
-<<<<<<< HEAD
   if (tab === 'clients') {
     renderClientsTable();
   }
-=======
->>>>>>> 0ac781e0b04473c871cc7a3fdaa8b0e25a7831d2
 }
 
 // Carga de imágenes locales
@@ -1535,8 +1529,6 @@ function copyInstallmentsBudget() {
     showToast('Error al copiar al portapapeles', 'error');
   });
 }
-
-<<<<<<< HEAD
 // ========================================================
 // MÓDULO CRM: GESTIÓN DE CLIENTES
 // ========================================================
