@@ -178,3 +178,15 @@
 #mobileMenu .max-w-sm {
   background-color: #ffffff !important;
 }
+/* Desplazamiento táctil fluido para la barra de pestañas en celulares */
+#adminTabsNav {
+  -webkit-overflow-scrolling: touch !important; /* Inercia táctil en Safari/iOS */
+  scrollbar-width: none; /* Oculta la barra gruesa en Firefox */
+  -ms-overflow-style: none; /* IE / Edge */
+}
+
+/* Oculta la barra de scroll en Chrome/Safari móvil para que se vea nativo como una App */
+#adminTabsNav::-webkit-scrollbar {
+  display: none !important;
+  height: 0px !important;
+}

@@ -819,6 +819,12 @@ function switchAdminTab(tab) {
   if (tab === 'clients') {
     renderClientsTable();
   }
+
+  // Agrega esto al final de tu función switchAdminTab(tab):
+  const activeBtn = document.getElementById(tabs[tab]?.btn);
+  if (activeBtn) {
+    activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }
 }
 
 // Carga de imágenes locales
@@ -1727,6 +1733,7 @@ function deleteClient(id, name) {
     }
   });
 }
+
 // Inicialización
 window.addEventListener('DOMContentLoaded', () => {
   applyStoreConfigUI();

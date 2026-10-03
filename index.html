@@ -706,23 +706,33 @@
       </div>
 
       <!-- Pestañas (Tabs fijas) -->
-      <div class="flex border-b border-slate-200 bg-white px-6 flex-shrink-0">
-        <button id="tabBtnProducts" onclick="switchAdminTab('products')" class="px-4 py-2.5 font-bold text-xs border-b-2 border-emerald-600 text-emerald-700">
-          <i class="fa-solid fa-box mr-1.5"></i> Productos
+      <div id="adminTabsNav" class="w-full min-w-0 max-w-full flex items-center border-b border-slate-200 bg-white px-4 sm:px-6 flex-shrink-0 overflow-x-auto overflow-y-hidden scroll-smooth select-none">
+        
+        <button id="tabBtnProducts" onclick="switchAdminTab('products')" class="flex-shrink-0 px-3.5 py-3 font-bold text-xs border-b-2 border-emerald-600 text-emerald-700 whitespace-nowrap transition-colors flex items-center gap-1.5">
+          <i class="fa-solid fa-box text-xs"></i> 
+          <span>Productos</span>
         </button>
-        <button id="tabBtnCategories" onclick="switchAdminTab('categories')" class="px-4 py-2.5 font-bold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800">
-          <i class="fa-solid fa-layer-group mr-1.5"></i> Categorías
+
+        <button id="tabBtnCategories" onclick="switchAdminTab('categories')" class="flex-shrink-0 px-3.5 py-3 font-bold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap transition-colors flex items-center gap-1.5">
+          <i class="fa-solid fa-layer-group text-xs"></i> 
+          <span>Categorías</span>
         </button>
-        <!-- NUEVA PESTAÑA: CALCULADORA PRIVADA DE CUOTAS -->
-        <button id="tabBtnInstallments" onclick="switchAdminTab('installments')" class="px-4 py-2.5 font-bold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
-          <i class="fa-solid fa-calculator mr-1.5"></i> Simulador de Cuotas
+
+        <button id="tabBtnInstallments" onclick="switchAdminTab('installments')" class="flex-shrink-0 px-3.5 py-3 font-bold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap transition-colors flex items-center gap-1.5">
+          <i class="fa-solid fa-calculator text-xs"></i> 
+          <span>Simulador de Cuotas</span>
         </button>
-        <button id="tabBtnClients" onclick="switchAdminTab('clients')" class="px-4 py-2.5 font-bold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
-          <i class="fa-solid fa-users mr-1.5"></i> Clientes
+
+        <button id="tabBtnClients" onclick="switchAdminTab('clients')" class="flex-shrink-0 px-3.5 py-3 font-bold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap transition-colors flex items-center gap-1.5">
+          <i class="fa-solid fa-users text-xs"></i> 
+          <span>Clientes</span>
         </button>
-        <button id="tabBtnSettings" onclick="switchAdminTab('settings')" class="px-4 py-2.5 font-bold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800">
-          <i class="fa-solid fa-gear mr-1.5"></i> Configuración
+
+        <button id="tabBtnSettings" onclick="switchAdminTab('settings')" class="flex-shrink-0 px-3.5 py-3 font-bold text-xs border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap transition-colors flex items-center gap-1.5">
+          <i class="fa-solid fa-gear text-xs"></i> 
+          <span>Configuración</span>
         </button>
+
       </div>
 
       <!-- Tab 1: Products Management (ESTA SECCIÓN AHORA TIENE SCROLL LIBRE) -->
