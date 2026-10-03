@@ -23,6 +23,7 @@ let isCaptchaVerified = false;
 let quickViewTarget = null;
 let qvQuantity = 1;
 let currentEditingImageBase64 = '';
+
 // Variables para paginación y búsqueda del panel Admin
 let adminCurrentPage = 1;
 const adminItemsPerPage = 8; // Puedes cambiar la cantidad de productos por página aquí
@@ -416,6 +417,29 @@ function resetAllFilters() {
   renderProducts();
 }
 
+// Función para intercambiar la foto al hacer clic en una miniatura
+function switchCardImage(productId, newUrl, btnElement) {
+  const mainImg = document.getElementById(`card-main-img-${productId}`);
+  if (mainImg) {
+    mainImg.style.opacity = '0.3';
+    setTimeout(() => {
+      mainImg.src = newUrl;
+      mainImg.style.opacity = '1';
+    }, 120);
+  }
+
+  // Resalta el botón seleccionado y desmarca los otros
+  if (btnElement && btnElement.parentElement) {
+    btnElement.parentElement.querySelectorAll('.thumb-btn').forEach(btn => {
+      btn.classList.remove('ring-2', 'ring-emerald-500', 'border-transparent');
+      btn.classList.add('border-slate-200');
+    });
+    btnElement.classList.add('ring-2', 'ring-emerald-500', 'border-transparent');
+    btnElement.classList.remove('border-slate-200');
+  }
+}
+
+// Renderizado principal del catálogo
 function renderProducts() {
   const grid = document.getElementById('productsGrid');
   const emptyState = document.getElementById('emptyCatalogState');
@@ -437,17 +461,22 @@ function renderProducts() {
     filtered.sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  counter.textContent = filtered.length;
+  if (counter) counter.textContent = filtered.length;
 
   if (filtered.length === 0) {
     grid.innerHTML = '';
-    emptyState.classList.remove('hidden');
+    emptyState?.classList.remove('hidden');
     return;
   }
 
-  emptyState.classList.add('hidden');
+  emptyState?.classList.add('hidden');
 
   grid.innerHTML = filtered.map(product => {
+    // Foto de portada principal (lee 'images' o 'image')
+    const mainPhoto = (Array.isArray(product.images) && product.images.length > 0)
+      ? product.images[0]
+      : (product.image || 'https://placehold.co/600x600/f1f5f9/0f172a?text=Producto');
+
     const badgeColor = {
       'Oferta': 'bg-red-500',
       'Nuevo': 'bg-emerald-600',
@@ -458,8 +487,14 @@ function renderProducts() {
     return `
       <div class="group bg-white rounded-3xl overflow-hidden border border-slate-200/80 hover:border-emerald-500/40 hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
         <div>
+          <!-- Foto de portada limpia -->
           <div class="relative aspect-square overflow-hidden bg-slate-100">
-            <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x600/f1f5f9/0f172a?text=Producto'">
+            <img 
+              src="${mainPhoto}" 
+              alt="${product.name}" 
+              class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" 
+              onerror="this.src='https://placehold.co/600x600/f1f5f9/0f172a?text=Producto'"
+            >
             
             ${product.badge ? `
               <span class="absolute top-3 left-3 ${badgeColor} text-white font-extrabold text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full shadow-md">
@@ -467,8 +502,9 @@ function renderProducts() {
               </span>
             ` : ''}
 
-            <button onclick="openQuickView('${product.id}')" class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-md hover:bg-white text-slate-800 text-xs font-bold px-3 py-1.5 rounded-xl shadow-md transition-all opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0">
-              <i class="fa-solid fa-eye mr-1"></i> Vista rápida
+            <!-- Botón que abre la Vista Rápida -->
+            <button onclick="openQuickView('${product.id}')" class="absolute bottom-3 right-3 bg-white/95 backdrop-blur-md hover:bg-emerald-600 hover:text-white text-slate-800 text-xs font-bold px-3 py-1.5 rounded-xl shadow-md transition-all opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 flex items-center gap-1.5">
+              <i class="fa-solid fa-eye"></i> Vista rápida
             </button>
           </div>
 
@@ -504,7 +540,7 @@ function renderProducts() {
               <span class="text-[10px] text-emerald-600 font-semibold block">Por Pedido</span>
             </div>
 
-            <button onclick="addToCart('${product.id}')" class="bg-slate-900 hover:bg-emerald-600 text-white font-bold text-xs p-3 sm:px-3.5 sm:py-2.5 rounded-xl transition-colors shadow-sm flex items-center gap-1.5 group-hover:bg-emerald-600" title="Agregar al presupuesto">
+            <button onclick="addToCart('${product.id}')" class="bg-slate-900 hover:bg-emerald-600 text-white font-bold text-xs p-3 sm:px-3.5 sm:py-2.5 rounded-xl transition-colors shadow-sm flex items-center gap-1.5 group-hover:bg-emerald-600" title="Agregar al pedido">
               <i class="fa-solid fa-cart-plus text-sm"></i>
               <span class="hidden sm:inline">Agregar</span>
             </button>
@@ -515,55 +551,120 @@ function renderProducts() {
   }).join('');
 }
 
-// Quick View Modal Handlers
+// Abrir el Modal de Vista Rápida cargando la galería completa
 function openQuickView(productId) {
   const product = products.find(p => p.id === productId);
   if (!product) return;
 
-  quickViewTarget = product;
-  qvQuantity = 1;
+  // 1. Obtener la lista de imágenes (de 1 a 4)
+  const gallery = (Array.isArray(product.images) && product.images.length > 0)
+    ? product.images
+    : (product.image ? [product.image] : ['https://placehold.co/600x600/f1f5f9/0f172a?text=Producto']);
 
-  document.getElementById('qvImage').src = product.image;
-  document.getElementById('qvTitle').textContent = product.name;
-  document.getElementById('qvCategory').textContent = product.category;
-  document.getElementById('qvDescription').textContent = product.description;
-  document.getElementById('qvPrice').textContent = formatCurrency(product.price);
-  
-  const oldPriceEl = document.getElementById('qvOldPrice');
-  if (product.oldPrice && product.oldPrice > product.price) {
-    oldPriceEl.textContent = formatCurrency(product.oldPrice);
-    oldPriceEl.classList.remove('hidden');
-  } else {
-    oldPriceEl.classList.add('hidden');
+  // 2. Colocar la primera imagen como activa
+  const mainImg = document.getElementById('quickViewImg');
+  if (mainImg) {
+    mainImg.src = gallery[0];
+    mainImg.style.opacity = '1';
   }
 
-  const badgeEl = document.getElementById('qvBadge');
-  if (product.badge) {
-    badgeEl.textContent = product.badge;
-    badgeEl.className = 'absolute top-3 left-3 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md text-white bg-slate-900';
-    badgeEl.classList.remove('hidden');
-  } else {
-    badgeEl.classList.add('hidden');
+  // 3. Renderizar las miniaturas debajo solo si tiene más de 1 imagen
+  const thumbsContainer = document.getElementById('quickViewThumbnails');
+  if (thumbsContainer) {
+    if (gallery.length > 1) {
+      thumbsContainer.innerHTML = gallery.map((imgUrl, idx) => `
+        <button 
+          type="button" 
+          onclick="switchQuickViewImage('${imgUrl}', this)" 
+          class="quick-thumb-btn w-12 h-12 rounded-xl border ${idx === 0 ? 'ring-2 ring-emerald-500 border-transparent' : 'border-slate-200'} overflow-hidden focus:outline-none transition-all hover:opacity-90 flex-shrink-0"
+          title="Ver imagen ${idx + 1}"
+        >
+          <img src="${imgUrl}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/80x80/f1f5f9/0f172a?text=Foto'">
+        </button>
+      `).join('');
+      thumbsContainer.classList.remove('hidden');
+    } else {
+      thumbsContainer.innerHTML = '';
+      thumbsContainer.classList.add('hidden');
+    }
   }
 
-  document.getElementById('qvQty').textContent = qvQuantity;
+  // 4. Cargar datos textuales con validación segura
+  const catEl = document.getElementById('quickViewCategory');
+  const titleEl = document.getElementById('quickViewTitle');
+  const priceEl = document.getElementById('quickViewPrice');
+  const descEl = document.getElementById('quickViewDesc');
 
-  document.getElementById('qvAddToCartBtn').onclick = () => {
-    addToCart(product.id, qvQuantity);
-    closeQuickView();
-  };
+  if (catEl) catEl.textContent = product.category;
+  if (titleEl) titleEl.textContent = product.name;
+  if (priceEl) priceEl.textContent = formatCurrency(product.price);
+  if (descEl) descEl.textContent = product.description || 'Sin descripción disponible.';
 
+  // Badge
+  const badgeEl = document.getElementById('quickViewBadge');
+  if (badgeEl) {
+    if (product.badge) {
+      badgeEl.textContent = product.badge;
+      badgeEl.classList.remove('hidden');
+    } else {
+      badgeEl.classList.add('hidden');
+    }
+  }
+
+  // Precio anterior
+  const oldPriceEl = document.getElementById('quickViewOldPrice');
+  if (oldPriceEl) {
+    if (product.oldPrice && product.oldPrice > product.price) {
+      oldPriceEl.textContent = formatCurrency(product.oldPrice);
+      oldPriceEl.classList.remove('hidden');
+    } else {
+      oldPriceEl.classList.add('hidden');
+    }
+  }
+
+  // Descuento mayorista
+  const wholesaleBox = document.getElementById('quickViewWholesaleBox');
+  const wholesaleText = document.getElementById('quickViewWholesaleText');
+  if (wholesaleBox && wholesaleText) {
+    if (product.wholesaleDiscount > 0) {
+      wholesaleText.textContent = `${product.wholesaleDiscount}% OFF Mayorista (a partir de 10 unidades)`;
+      wholesaleBox.classList.remove('hidden');
+    } else {
+      wholesaleBox.classList.add('hidden');
+    }
+  }
+
+  // Botón agregar al carrito
+  const addBtn = document.getElementById('quickViewAddBtn');
+  if (addBtn) {
+    addBtn.onclick = () => {
+      addToCart(product.id);
+      closeQuickView();
+    };
+  }
+
+  // 5. Mostrar modal de forma compatible (limpia opacidades si las tuviera)
   const modal = document.getElementById('quickViewModal');
   const content = document.getElementById('quickViewContent');
-  modal.classList.remove('opacity-0', 'pointer-events-none');
-  content.classList.remove('scale-95');
+  if (modal) {
+    modal.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+  }
+  if (content) {
+    content.classList.remove('scale-95');
+  }
 }
 
+// Cerrar Modal asegurando que no tire error de null
 function closeQuickView() {
   const modal = document.getElementById('quickViewModal');
   const content = document.getElementById('quickViewContent');
-  modal.classList.add('opacity-0', 'pointer-events-none');
-  content.classList.add('scale-95');
+
+  if (modal) {
+    modal.classList.add('hidden', 'opacity-0', 'pointer-events-none');
+  }
+  if (content) {
+    content.classList.add('scale-95');
+  }
 }
 
 function adjustQvQty(delta) {
@@ -859,7 +960,29 @@ document.getElementById('formProdImgUrl')?.addEventListener('input', function(e)
   }
 });
 
-// Guardar / Actualizar Producto en Supabase
+// Intercambia suavemente la foto principal dentro de la Vista Rápida
+function switchQuickViewImage(newImgUrl, thumbElement) {
+  const mainImg = document.getElementById('quickViewImg');
+  if (mainImg) {
+    mainImg.style.opacity = '0.3';
+    setTimeout(() => {
+      mainImg.src = newImgUrl;
+      mainImg.style.opacity = '1';
+    }, 120);
+  }
+
+  // Resalta con borde esmeralda la miniatura activa
+  if (thumbElement && thumbElement.parentElement) {
+    thumbElement.parentElement.querySelectorAll('.quick-thumb-btn').forEach(btn => {
+      btn.classList.remove('ring-2', 'ring-emerald-500', 'border-transparent');
+      btn.classList.add('border-slate-200');
+    });
+    thumbElement.classList.add('ring-2', 'ring-emerald-500', 'border-transparent');
+    thumbElement.classList.remove('border-slate-200');
+  }
+}
+
+// Guardar / Actualizar Producto en Supabase (con soporte para 4 imágenes)
 document.getElementById('productManageForm')?.addEventListener('submit', async function(e) {
   e.preventDefault();
 
@@ -876,9 +999,19 @@ document.getElementById('productManageForm')?.addEventListener('submit', async f
   const badge = document.getElementById('formProdBadge').value;
   const description = document.getElementById('formProdDesc').value.trim();
 
-  const finalImage = currentEditingImageBase64 || 
-                     document.getElementById('formProdImgUrl').value.trim() || 
-                     'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80';
+  // Asegura capturar cualquier URL escrita directamente en los 4 campos antes de guardar
+  for (let i = 1; i <= 4; i++) {
+    const urlVal = document.getElementById(`formProdImgUrl${i}`)?.value.trim();
+    if (!productSlotImages[i - 1] && urlVal) {
+      productSlotImages[i - 1] = urlVal;
+    }
+  }
+
+  // Filtrar fotos válidas no vacías
+  const validImages = productSlotImages.filter(img => img && img.trim() !== '');
+  
+  // Foto 1 principal o imagen por defecto
+  const finalImage = validImages[0] || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&auto=format&fit=crop&q=80';
 
   const payload = {
     name,
@@ -888,7 +1021,8 @@ document.getElementById('productManageForm')?.addEventListener('submit', async f
     wholesaleDiscount,
     badge,
     description,
-    image: finalImage
+    image: finalImage,    // Compatibilidad con la foto principal
+    images: validImages   // Arreglo con hasta 4 variantes/fotos
   };
 
   try {
@@ -920,6 +1054,7 @@ document.getElementById('productManageForm')?.addEventListener('submit', async f
   }
 });
 
+// Cargar Producto en el Formulario para Editar (carga hasta 4 imágenes)
 function editProduct(productId) {
   const product = products.find(p => p.id === productId);
   if (!product) return;
@@ -937,10 +1072,25 @@ function editProduct(productId) {
   document.getElementById('formProdBadge').value = product.badge || '';
   document.getElementById('formProdDesc').value = product.description;
 
-  currentEditingImageBase64 = product.image;
-  document.getElementById('formImgPreview').src = product.image;
-  document.getElementById('imagePreviewContainer').classList.remove('hidden');
-  document.getElementById('imagePreviewContainer').classList.add('flex');
+  // Limpiar slots antes de cargar las imágenes del producto
+  resetAllImageSlots();
+
+  // Obtener la lista de imágenes (si tiene el array 'images' o solo 'image')
+  const imagesList = (Array.isArray(product.images) && product.images.length > 0)
+    ? product.images 
+    : (product.image ? [product.image] : []);
+
+  // Distribuir en las casillas 1, 2, 3 y 4
+  imagesList.slice(0, 4).forEach((imgUrl, index) => {
+    const slotNum = index + 1;
+    productSlotImages[index] = imgUrl;
+
+    const urlInput = document.getElementById(`formProdImgUrl${slotNum}`);
+    if (urlInput && !imgUrl.startsWith('data:')) {
+      urlInput.value = imgUrl;
+    }
+    updateSlotPreviewUI(slotNum);
+  });
 
   document.getElementById('productFormTitle').innerHTML = '<i class="fa-solid fa-pen-to-square text-emerald-600 mr-1.5"></i> Editar Producto';
   document.getElementById('cancelEditBtn').classList.remove('hidden');
@@ -949,6 +1099,7 @@ function editProduct(productId) {
   document.getElementById('tabContentProducts').scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// Eliminar Producto
 function deleteProduct(productId) {
   showConfirmDialog({
     title: 'Eliminar Producto',
@@ -972,15 +1123,17 @@ function deleteProduct(productId) {
   });
 }
 
+// Resetear Formulario y Limpiar las 4 Imágenes
 function resetProductForm() {
   document.getElementById('productManageForm').reset();
   document.getElementById('editProductId').value = '';
   if (document.getElementById('formProdWholesale')) {
     document.getElementById('formProdWholesale').value = 0;
   }
-  currentEditingImageBase64 = '';
-  document.getElementById('imagePreviewContainer').classList.add('hidden');
-  document.getElementById('imagePreviewContainer').classList.remove('flex');
+  
+  // Limpia el arreglo y las 4 cajas de previsualización
+  resetAllImageSlots();
+
   document.getElementById('productFormTitle').innerHTML = '<i class="fa-solid fa-plus-circle text-emerald-600 mr-1.5"></i> Agregar Nuevo Producto';
   document.getElementById('cancelEditBtn').classList.add('hidden');
   document.getElementById('saveProductBtn').innerHTML = '<i class="fa-solid fa-floppy-disk mr-1"></i> Guardar Producto';
@@ -1734,6 +1887,69 @@ function deleteClient(id, name) {
   });
 }
 
+// Variable que almacena las 4 imágenes en memoria
+let productSlotImages = ['', '', '', ''];
+
+// Previsualización al escribir o pegar enlace URL
+function previewSlotImage(slotIndex, url) {
+  const idx = slotIndex - 1;
+  productSlotImages[idx] = url.trim();
+  updateSlotPreviewUI(slotIndex);
+}
+
+// Carga y previsualización de archivo local (Galería del dispositivo)
+function handleSlotFileUpload(slotIndex, input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      productSlotImages[slotIndex - 1] = e.target.result;
+      updateSlotPreviewUI(slotIndex);
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+// Muestra u oculta la caja de vista previa de cada slot
+function updateSlotPreviewUI(slotIndex) {
+  const idx = slotIndex - 1;
+  const val = productSlotImages[idx];
+  const box = document.getElementById(`imagePreviewContainer${slotIndex}`);
+  const img = document.getElementById(`formImgPreview${slotIndex}`);
+  
+  if (val) {
+    if (img) img.src = val;
+    if (box) {
+      box.classList.remove('hidden');
+      box.classList.add('flex');
+    }
+  } else {
+    if (box) {
+      box.classList.remove('flex');
+      box.classList.add('hidden');
+    }
+  }
+}
+
+// Botón de limpiar slot individual
+function clearImageSlot(slotIndex) {
+  const idx = slotIndex - 1;
+  productSlotImages[idx] = '';
+  
+  const urlInp = document.getElementById(`formProdImgUrl${slotIndex}`);
+  const fileInp = document.getElementById(`formProdImgFile${slotIndex}`);
+  if (urlInp) urlInp.value = '';
+  if (fileInp) fileInp.value = '';
+  
+  updateSlotPreviewUI(slotIndex);
+}
+
+// Limpiar todas las casillas al cancelar edición o guardar nuevo producto
+function resetAllImageSlots() {
+  productSlotImages = ['', '', '', ''];
+  for (let i = 1; i <= 4; i++) {
+    clearImageSlot(i);
+  }
+}
 // Inicialización
 window.addEventListener('DOMContentLoaded', () => {
   applyStoreConfigUI();

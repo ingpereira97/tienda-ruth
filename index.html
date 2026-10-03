@@ -484,49 +484,70 @@
     </div>
   </aside>
 
-  <!-- Quick View Product Modal -->
-  <div id="quickViewModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
-    <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative border border-slate-100 scale-95 transition-transform duration-200" id="quickViewContent">
-      <button onclick="closeQuickView()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white/80 backdrop-blur-md shadow-sm border border-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center">
-        <i class="fa-solid fa-xmark"></i>
+  <!-- Modal de Vista Rápida -->
+<div id="quickViewModal" class="hidden fixed inset-0 z-50 overflow-y-auto">
+  <!-- Fondo oscuro -->
+  <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeQuickView()"></div>
+
+  <!-- Contenedor del Modal -->
+  <div class="flex min-h-full items-center justify-center p-3 sm:p-4">
+    <!-- pt-12 en celular baja el contenido para que la X quede libre arriba a la derecha; sm:p-6 mantiene la compu intacta -->
+    <div class="relative bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden px-5 pb-6 pt-12 sm:p-6 z-10">
+      
+      <!-- Botón Cerrar (Elevado en la esquina superior derecha sin tapar la foto) -->
+      <button 
+        onclick="closeQuickView()" 
+        class="absolute top-3 right-3 sm:top-4 sm:right-4 z-40 w-9 h-9 rounded-full bg-slate-100/90 sm:bg-white border border-slate-200 shadow-sm text-slate-500 hover:text-slate-900 hover:bg-slate-200 flex items-center justify-center transition-all active:scale-95" 
+        aria-label="Cerrar vista rápida"
+      >
+        <i class="fa-solid fa-xmark text-base"></i>
       </button>
 
-      <div class="grid grid-cols-1 md:grid-cols-2">
-        <div class="relative aspect-square bg-slate-100 md:rounded-l-3xl overflow-hidden">
-          <img id="qvImage" src="" alt="Vista Previa" class="w-full h-full object-cover">
-          <span id="qvBadge" class="absolute top-3 left-3 text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md text-white"></span>
-        </div>
-
-        <div class="p-6 md:p-8 flex flex-col justify-between">
-          <div>
-            <span id="qvCategory" class="text-xs font-bold text-emerald-600 uppercase tracking-wider"></span>
-            <h3 id="qvTitle" class="text-xl font-extrabold text-slate-900 mt-1 mb-2"></h3>
-            <div class="flex items-baseline gap-2 mb-4">
-              <span id="qvPrice" class="text-2xl font-black text-slate-900"></span>
-              <span id="qvOldPrice" class="text-sm font-medium text-slate-400 line-through"></span>
-            </div>
-            <p id="qvDescription" class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6"></p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+        
+        <!-- Columna Izquierda: Visor con Miniaturas -->
+        <div class="flex flex-col gap-3">
+          <!-- Foto Principal -->
+          <div class="relative aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 shadow-inner">
+            <img id="quickViewImg" src="" alt="Producto" class="w-full h-full object-cover transition-opacity duration-200">
+            <span id="quickViewBadge" class="hidden absolute top-2.5 left-2.5 bg-emerald-600 text-white font-extrabold text-[10px] uppercase px-2.5 py-1 rounded-full shadow-md"></span>
           </div>
 
-          <div class="space-y-4 pt-4 border-t border-slate-100">
-            <div class="flex items-center gap-3">
-              <span class="text-xs font-bold text-slate-700">Cantidad:</span>
-              <div class="flex items-center border border-slate-200 rounded-xl bg-slate-50">
-                <button onclick="adjustQvQty(-1)" class="px-3 py-1.5 text-slate-600 hover:text-slate-900"><i class="fa-solid fa-minus text-xs"></i></button>
-                <span id="qvQty" class="px-3 text-xs font-bold text-slate-900">1</span>
-                <button onclick="adjustQvQty(1)" class="px-3 py-1.5 text-slate-600 hover:text-slate-900"><i class="fa-solid fa-plus text-xs"></i></button>
-              </div>
+          <!-- Miniaturas Interactivas -->
+          <div id="quickViewThumbnails" class="flex items-center gap-2 overflow-x-auto py-1"></div>
+        </div>
+
+        <!-- Columna Derecha: Información del Producto -->
+        <div class="flex flex-col justify-between">
+          <div class="space-y-3">
+            <span id="quickViewCategory" class="text-xs font-bold text-emerald-600 uppercase tracking-wider"></span>
+            <h2 id="quickViewTitle" class="text-lg sm:text-xl font-black text-slate-900 leading-tight"></h2>
+            
+            <div class="flex items-baseline gap-2">
+              <span id="quickViewPrice" class="text-xl sm:text-2xl font-black text-slate-900"></span>
+              <span id="quickViewOldPrice" class="text-xs sm:text-sm font-semibold text-slate-400 line-through hidden"></span>
             </div>
 
-            <button id="qvAddToCartBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm py-3 px-4 rounded-xl shadow-md transition-all">
-              <i class="fa-solid fa-cart-plus mr-2"></i> Agregar al Carrito
+            <div id="quickViewWholesaleBox" class="hidden">
+              <span class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg">
+                <i class="fa-solid fa-tags"></i> <span id="quickViewWholesaleText"></span>
+              </span>
+            </div>
+
+            <p id="quickViewDesc" class="text-xs text-slate-600 leading-relaxed max-h-32 sm:max-h-40 overflow-y-auto pr-1"></p>
+          </div>
+
+          <div class="pt-4 sm:pt-5 border-t border-slate-100 flex items-center gap-3">
+            <button id="quickViewAddBtn" class="w-full bg-slate-900 hover:bg-emerald-600 text-white font-bold text-xs py-3 sm:py-3.5 px-4 rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+              <i class="fa-solid fa-cart-plus"></i> Agregar al Pedido
             </button>
           </div>
         </div>
+
       </div>
     </div>
   </div>
-
+</div>
   <!-- Checkout & Anti-Robot Modal -->
   <div id="checkoutModal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
     <div class="bg-white rounded-3xl max-w-lg w-full max-h-[95vh] overflow-y-auto shadow-2xl p-6 sm:p-8 relative border border-slate-100">
@@ -805,24 +826,113 @@
             </div>
 
             <!-- Image Input Options -->
-            <div class="p-3 bg-white rounded-xl border border-slate-200 space-y-2">
-              <label class="block text-[11px] font-bold text-slate-700">Imagen del Producto (URL o Cargar desde tu dispositivo)</label>
-              
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <input type="url" id="formProdImgUrl" placeholder="https://ejemplo.com/foto.jpg" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500">
-                  <span class="text-[10px] text-slate-400">Pega un enlace web directo de imagen</span>
-                </div>
-                <div>
-                  <input type="file" id="formProdImgFile" accept="image/*" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer">
-                  <span class="text-[10px] text-slate-400">O sube una imagen de tu galería</span>
-                </div>
+            <!-- Contenedor de hasta 4 Imágenes del Producto -->
+            <div class="space-y-3">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700">Imágenes del Producto (Hasta 4 fotos para variantes de color, sabor o ángulos)</label>
+                <span class="text-[10px] text-slate-400">La primera imagen es la portada principal; las demás se activan al hacer clic en el catálogo.</span>
               </div>
 
-              <!-- Preview thumbnail -->
-              <div id="imagePreviewContainer" class="hidden items-center gap-3 pt-2">
-                <img id="formImgPreview" src="" alt="Previsualización" class="w-12 h-12 rounded-lg object-cover border border-slate-200">
-                <span class="text-xs text-emerald-600 font-medium"><i class="fa-solid fa-check mr-1"></i> Imagen lista para guardar</span>
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+
+                <!-- FOTO 1: PRINCIPAL -->
+                <div class="p-3 bg-white rounded-xl border border-slate-200 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <label class="block text-[11px] font-bold text-emerald-700">
+                      <i class="fa-solid fa-star text-[10px] mr-1"></i> Foto 1 (Principal / Portada *)
+                    </label>
+                    <button type="button" onclick="clearImageSlot(1)" class="text-[10px] text-slate-400 hover:text-rose-600 transition-colors">Limpiar</button>
+                  </div>
+                  
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <input type="url" id="formProdImgUrl1" placeholder="https://ejemplo.com/foto.jpg" oninput="previewSlotImage(1, this.value)" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-lg px-2.5 py-2 focus:outline-none focus:border-emerald-500">
+                      <span class="text-[9px] text-slate-400 block mt-0.5">Enlace web directo</span>
+                    </div>
+                    <div>
+                      <input type="file" id="formProdImgFile1" accept="image/*" onchange="handleSlotFileUpload(1, this)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer">
+                      <span class="text-[9px] text-slate-400 block mt-0.5">O sube desde galería</span>
+                    </div>
+                  </div>
+
+                  <div id="imagePreviewContainer1" class="hidden items-center gap-3 pt-1 border-t border-slate-100">
+                    <img id="formImgPreview1" src="" alt="Previsualización" class="w-10 h-10 rounded-lg object-cover border border-slate-200">
+                    <span class="text-xs text-emerald-600 font-medium"><i class="fa-solid fa-check mr-1"></i> Imagen principal lista</span>
+                  </div>
+                </div>
+
+                <!-- FOTO 2: VARIANTE -->
+                <div class="p-3 bg-white rounded-xl border border-slate-200 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <label class="block text-[11px] font-bold text-slate-700">Foto 2 (Variante / Sabor / Color)</label>
+                    <button type="button" onclick="clearImageSlot(2)" class="text-[10px] text-slate-400 hover:text-rose-600 transition-colors">Limpiar</button>
+                  </div>
+                  
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <input type="url" id="formProdImgUrl2" placeholder="https://ejemplo.com/foto2.jpg" oninput="previewSlotImage(2, this.value)" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-lg px-2.5 py-2 focus:outline-none focus:border-emerald-500">
+                      <span class="text-[9px] text-slate-400 block mt-0.5">Enlace web directo</span>
+                    </div>
+                    <div>
+                      <input type="file" id="formProdImgFile2" accept="image/*" onchange="handleSlotFileUpload(2, this)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer">
+                      <span class="text-[9px] text-slate-400 block mt-0.5">O sube desde galería</span>
+                    </div>
+                  </div>
+
+                  <div id="imagePreviewContainer2" class="hidden items-center gap-3 pt-1 border-t border-slate-100">
+                    <img id="formImgPreview2" src="" alt="Previsualización" class="w-10 h-10 rounded-lg object-cover border border-slate-200">
+                    <span class="text-xs text-emerald-600 font-medium"><i class="fa-solid fa-check mr-1"></i> Foto 2 lista</span>
+                  </div>
+                </div>
+
+                <!-- FOTO 3: VARIANTE -->
+                <div class="p-3 bg-white rounded-xl border border-slate-200 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <label class="block text-[11px] font-bold text-slate-700">Foto 3 (Variante / Sabor / Color)</label>
+                    <button type="button" onclick="clearImageSlot(3)" class="text-[10px] text-slate-400 hover:text-rose-600 transition-colors">Limpiar</button>
+                  </div>
+                  
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <input type="url" id="formProdImgUrl3" placeholder="https://ejemplo.com/foto3.jpg" oninput="previewSlotImage(3, this.value)" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-lg px-2.5 py-2 focus:outline-none focus:border-emerald-500">
+                      <span class="text-[9px] text-slate-400 block mt-0.5">Enlace web directo</span>
+                    </div>
+                    <div>
+                      <input type="file" id="formProdImgFile3" accept="image/*" onchange="handleSlotFileUpload(3, this)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer">
+                      <span class="text-[9px] text-slate-400 block mt-0.5">O sube desde galería</span>
+                    </div>
+                  </div>
+
+                  <div id="imagePreviewContainer3" class="hidden items-center gap-3 pt-1 border-t border-slate-100">
+                    <img id="formImgPreview3" src="" alt="Previsualización" class="w-10 h-10 rounded-lg object-cover border border-slate-200">
+                    <span class="text-xs text-emerald-600 font-medium"><i class="fa-solid fa-check mr-1"></i> Foto 3 lista</span>
+                  </div>
+                </div>
+
+                <!-- FOTO 4: VARIANTE -->
+                <div class="p-3 bg-white rounded-xl border border-slate-200 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <label class="block text-[11px] font-bold text-slate-700">Foto 4 (Variante / Sabor / Color)</label>
+                    <button type="button" onclick="clearImageSlot(4)" class="text-[10px] text-slate-400 hover:text-rose-600 transition-colors">Limpiar</button>
+                  </div>
+                  
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <input type="url" id="formProdImgUrl4" placeholder="https://ejemplo.com/foto4.jpg" oninput="previewSlotImage(4, this.value)" class="w-full bg-slate-50 border border-slate-200 text-xs rounded-lg px-2.5 py-2 focus:outline-none focus:border-emerald-500">
+                      <span class="text-[9px] text-slate-400 block mt-0.5">Enlace web directo</span>
+                    </div>
+                    <div>
+                      <input type="file" id="formProdImgFile4" accept="image/*" onchange="handleSlotFileUpload(4, this)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer">
+                      <span class="text-[9px] text-slate-400 block mt-0.5">O sube desde galería</span>
+                    </div>
+                  </div>
+
+                  <div id="imagePreviewContainer4" class="hidden items-center gap-3 pt-1 border-t border-slate-100">
+                    <img id="formImgPreview4" src="" alt="Previsualización" class="w-10 h-10 rounded-lg object-cover border border-slate-200">
+                    <span class="text-xs text-emerald-600 font-medium"><i class="fa-solid fa-check mr-1"></i> Foto 4 lista</span>
+                  </div>
+                </div>
+
               </div>
             </div>
 
